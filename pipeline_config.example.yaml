@@ -1,0 +1,46 @@
+# Example pipeline configuration.
+# Copy to pipeline_config.yaml and fill in local paths before running.
+#
+# All paths below are relative to this directory unless given as absolute
+# paths, matching pipeline.py's ROOT-relative join.
+
+paths:
+  # Where raw OpenAlex snapshot partitions are downloaded to. Large (~600GB+
+  # gzipped JSONL for the full works snapshot) — keep this outside the repo.
+  snapshot_dir:         "/path/to/openalex_snapshot"
+  bert_output_dir:      "data/processed"
+  # Nemotron writes its own classify.sqlite/final_relevant.jsonl here, kept
+  # separate from bert_output_dir's classify.sqlite so a Nemotron run judges
+  # the entire pass1_bert.jsonl itself rather than skipping papers an earlier
+  # Stage-2 run already marked done.
+  nemotron_output_dir: "data/processed_nemotron"
+  # Fine-tuned SciBERT relevance classifier (not included in this repo — see
+  # pipeline_code/README.md for how it was trained / where it will be released).
+  bert_model:           "data/models/bert"
+  bert_config:          "configs/bert_classifier.yaml"
+  # Local path to a downloaded NVIDIA-Nemotron-3-Nano-30B-A3B-BF16 checkpoint.
+  nemotron_model:       "/path/to/models/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16"
+
+download:
+  workers: 8
+  # Optional: only download partitions updated after this date (skip-ahead
+  # for a delta run against an existing snapshot). Leave unset for a full
+  # from-scratch download.
+  # after_date: "2026-02-01"
+
+bert:
+  # Format: "<device_id>:batch=<N>,chunk=<N>,queue=<N>,readers=<N>"
+  # readers is memory-bounded, not CPU-bound: each reader keeps a private full
+  # copy of the dedup dict. Don't raise readers without checking
+  # (readers+1) * (dedup dict size) against free RAM.
+  gpu_configs: "0:batch=4096,chunk=8192,queue=10,readers=5"
+  threshold: 0.45
+  year_start: 1950
+  # year_end defaults to current year
+  dedup_index_workers: 16
+
+nemotron:
+  # Fraction of GPU memory vLLM is allowed to reserve. Leave enough headroom
+  # for Nemotron's Mamba cache blocks at the default max_num_seqs (too low a
+  # value fails with "max_num_seqs exceeds available Mamba cache blocks").
+  gpu_mem_util: 0.80

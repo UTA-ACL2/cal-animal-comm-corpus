@@ -1,0 +1,19 @@
+# Pipeline dependencies (download -> dedup -> BERT filter -> Nemotron annotate).
+# Versions match the environment the reported run used.
+
+pyyaml==6.0.2
+tqdm==4.66.5
+orjson
+
+# Stage 1: download
+boto3
+
+# Stage 2a/2: dedup index + SciBERT filtering
+pyarrow==16.1.0
+numpy==2.2.6
+torch==2.9.1
+transformers==4.57.6        # must stay <5 for vllm
+
+# Stage 3: Nemotron annotation
+vllm==0.16.0                # requires transformers >=4.56,<5
+mistral-common==1.11.0      # Nemotron's tokenizer is Mistral-derived (tokenizer library only, not a model used in the pipeline)

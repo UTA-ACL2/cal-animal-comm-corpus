@@ -1,0 +1,20 @@
+model:
+  name: allenai/scibert_scivocab_uncased
+  max_len: 512
+input_fields:
+  use_title: true
+  use_abstract: true
+  use_venue: true
+  use_topics: false
+  use_keywords: true
+  use_concepts: false
+  use_mesh_terms: false
+  use_primary_topic_field: true
+  use_authors: false
+  use_institutions: false
+  max_topics: 5
+  max_keywords: 8
+  max_concepts: 5
+  max_mesh: 5
+inference:
+  threshold: 0.4
