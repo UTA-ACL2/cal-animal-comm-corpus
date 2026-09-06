@@ -28,8 +28,8 @@ search/application code that consumes the resulting dataset.
    builds this input text; both training and inference use the exact same
    logic). Records scoring at or above the threshold (0.45 in the reported
    run) proceed to Stage 4. **The trained SciBERT checkpoint and the code
-   used to train it are not included in this repo** — the model may be
-   released separately (e.g. on Hugging Face).
+   used to train it are not included in this repo** due to file size limits.
+   Contact us at uta.acl2@gmail.com if you'd like access to the model.
 
 4. **Nemotron annotation** (`pipeline_scripts/annotate_nemotron.py`) — every
    BERT-stage survivor is passed to `NVIDIA-Nemotron-3-Nano-30B-A3B-BF16`
@@ -119,6 +119,6 @@ construction.
 - Any downstream search/application code that consumes the resulting
   dataset — this repo is the dataset construction pipeline only.
 - The trained SciBERT checkpoint and the code/labeled data used to train
-  it — may be released separately (e.g. on Hugging Face).
+  it — excluded due to file size limits. Contact uta.acl2@gmail.com for access.
 - The raw OpenAlex snapshot and intermediate pipeline outputs (large,
   regenerable from the public OpenAlex bucket via this pipeline).
